@@ -1,9 +1,12 @@
 from django.db import models
 
-from wagtail.models import Page
+from modelcluster.fields import ParentalKey
+
+from wagtail.models import Page, Orderable
 from wagtail.fields import RichTextField
-from wagtail.admin.panels import FieldPanel
+from wagtail.admin.panels import FieldPanel, InlinePanel
 from wagtail.search import index
+
 
 class BlogIndexPage(Page):
     intro = RichTextField(blank=True)
@@ -37,4 +40,18 @@ class BlogPage(Page):
         FieldPanel('author'),
         FieldPanel('description'),
         FieldPanel('body'),
+    ]
+
+
+class BlogPageImage(Orderable):
+    # TODO: on_delete?, related_name? how?, ParentalKey?, Orderable class?
+    page = ParentalKey(BlogPage, on_delete=models.CASCADE, related_name='blog_page_image')
+
+    image = models.ForeignKey(
+        'wagtailimages.Image', on_delete=models.CASCADE, related_name='+'
+    )
+    caption = models.CharField(blank=True, max_length=250)
+    panels = [
+        FieldPanel('image'),
+        FieldPanel('caption'),
     ]
