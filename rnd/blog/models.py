@@ -40,12 +40,13 @@ class BlogPage(Page):
         FieldPanel('author'),
         FieldPanel('description'),
         FieldPanel('body'),
+        InlinePanel('blog_page_images', label="Images"),
     ]
 
 
 class BlogPageImage(Orderable):
     # TODO: on_delete?, related_name? how?, ParentalKey?, Orderable class?
-    page = ParentalKey(BlogPage, on_delete=models.CASCADE, related_name='blog_page_image')
+    page = ParentalKey(BlogPage, on_delete=models.CASCADE, related_name='blog_page_images')
 
     image = models.ForeignKey(
         'wagtailimages.Image', on_delete=models.CASCADE, related_name='+'
