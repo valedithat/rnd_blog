@@ -1,12 +1,13 @@
 from django.db import models
 
 from modelcluster.fields import ParentalKey
+from modelcluster.contrib.taggit import ClusterTaggableManager
+from taggit.models import TaggedItemBase
 
 from wagtail.models import Page, Orderable
 from wagtail.fields import RichTextField
-from wagtail.admin.panels import FieldPanel, InlinePanel
+from wagtail.admin.panels import FieldPanel, InlinePanel, MultiFieldPanel
 from wagtail.search import index
-
 
 class BlogIndexPage(Page):
     intro = RichTextField(blank=True)
@@ -21,12 +22,29 @@ class BlogIndexPage(Page):
         return context        
 
 
+class BlogPageTag(TaggedItemBase):
+    content_object = ParentalKey(
+        'BlogPage',
+        related_name='tagged_items',
+        on_delete=models.CASCADE
+    )
+
+
 class BlogPage(Page):
     author = models.CharField(max_length=254)
     description = models.CharField(max_length=254)
     body = RichTextField(blank=True)
+    tags = ClusterTaggableManager(through=BlogPageTag, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+
+    def main_image(self):
+        gallery_item = self.gallery_images.first()
+        if gallery_item:
+            return gallery_item.image
+        else:
+            return None
 
 
     search_fields = Page.search_fields + [
@@ -40,6 +58,7 @@ class BlogPage(Page):
         FieldPanel('description'),
         FieldPanel('body'),
         InlinePanel('blog_page_images', label="Images"),
+        FieldPanel('tags'),
     ]
 
 
