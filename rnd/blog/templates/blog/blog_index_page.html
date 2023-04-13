@@ -1,8 +1,4 @@
-{% extends "base.html" %}
-
 {% load wagtailcore_tags wagtailimages_tags %}
-
-{% block body_class %}template-blogindexpage{% endblock %}
 
 <h1><center>{{ page.title }}</center></h1>
 <hr>
@@ -19,7 +15,7 @@
         {% endwith %}
 
         <p>{{ post.description }}</p>
-        <p>By {{ post.specific.author }} | {{ post.specific.created_at }}</p>
+        <p>By {{ post.author }} | {{ post.created_at }}</p>
         <hr>
     {% endwith %}
 {% endfor %}

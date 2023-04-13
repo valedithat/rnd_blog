@@ -17,7 +17,8 @@ class BlogIndexPage(Page):
 
     def get_context(self, request):
         context = super().get_context(request)
-        blogpages = self.get_children().live().order_by('-first_published_at')
+        blogpages = BlogPage.objects.all().order_by('-created_at')
+        # blogpages = self.get_children().live().order_by('-created_at')
         context['blogpages'] = blogpages
         return context        
 
@@ -40,7 +41,7 @@ class BlogPage(Page):
 
 
     def main_image(self):
-        gallery_item = self.gallery_images.first()
+        gallery_item = self.blog_page_images.first()
         if gallery_item:
             return gallery_item.image
         else:
