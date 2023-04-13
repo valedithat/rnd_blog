@@ -15,12 +15,13 @@
             <br />
 
             <p>
-                {% if blogpage.updated_at %}
-                    {{ blogpage.created_at }}
+                {{ blogpage.created_at }}
 
                 {% if blogpage.author %}
                     | By {{ blogpage.author }}
                 {% endif %}
+
+                
             </p>
             <hr>
 
@@ -28,7 +29,6 @@
             <small>Revised: {{ blogpage.latest_revision_created_at }}</small><br />
 
         </p>
-
     {% empty %}
         No pages found with that tag.
     {% endfor %}
